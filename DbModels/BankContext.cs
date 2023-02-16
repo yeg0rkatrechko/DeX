@@ -16,7 +16,7 @@ namespace DbModels
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-GFDH238\SQLEXPRESS;Database=bankdb;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=DESKTOP-GFDH238\SQLEXPRESS;Database=bankdb;Trusted_Connection=True; Integrated Security=False;");
         }
     }
 }

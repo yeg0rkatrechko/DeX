@@ -157,14 +157,29 @@ namespace Services
             dbContext.Account.Add(accountDb);
             dbContext.SaveChanges();
         }
+        public async Task AddAccountAsync(Guid id, Account account)
+        {
+            var accountDb = new AccountDB
+            {
+                Amount = account.Amount,
+                ClientId = id,
+                Currency = new CurrencyDB
+                {
+                    Name = "USD",
+                    Code = 1,
+                }
+            };
+
+            await dbContext.Account.AddAsync(accountDb);
+            await dbContext.SaveChangesAsync();
+        }
         public void UpdateClient(Client client)
         {
             var clientDb = dbContext.Clients.FirstOrDefault(c => c.Id == client.ID);
 
             if (clientDb == null)
-            {
                 throw new ExistenceException("Данного клиента не существует");
-            }
+            
             clientDb.Id = client.ID;
             clientDb.Name = client.Name;
             clientDb.PassportID = client.PassportID;
@@ -178,8 +193,8 @@ namespace Services
         {
             var clientDb = await dbContext.Clients.FirstOrDefaultAsync(p => p.Id == client.ID);
 
-            if (clientDb == null)
-                throw new KeyNotFoundException("Данного клиента не существует");
+            if (await dbContext.Clients.FirstOrDefaultAsync(p => p.Id == client.ID) == null)
+                throw new ExistenceException("Данного клиента не существует");
             clientDb.Id = client.ID;
             clientDb.Name = client.Name;
             clientDb.PassportID = client.PassportID;

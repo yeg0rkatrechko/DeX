@@ -3,6 +3,10 @@ namespace Services
 {
     public class BankService
     {
+        static public int OwnersSalaries(decimal profit, decimal expenses, int numberOfOwners)
+        {
+            return (int)((profit - expenses) / numberOfOwners);
+        }
         static public Employee ClientToEmployee (Client client)
         {
             Employee employee = new Employee()

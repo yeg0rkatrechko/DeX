@@ -19,7 +19,7 @@ namespace Services
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-GFDH238\SQLEXPRESS;Database=bankdb;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Server=DESKTOP-GFDH238\SQLEXPRESS;Database=bankdb;Trusted_Connection=True;TrustServerCertificate=True;Integrated Security=SSPI;");
         }
     }
 }

@@ -13,9 +13,9 @@ namespace Services
     {
         public static Faker<Client> CreateFakeClient()
         {
-            var id = 0;
             var generator = new Faker<Client>("ru")
                 .StrictMode(true)
+                .RuleFor(x => x.ID, y => y.Random.Uuid())
                 .RuleFor(x => x.PassportID, y => y.Random.String2(2).ToUpper() + y.Random.Int(1000, 9999).ToString())
                 .RuleFor(x => x.Name, y => y.Name.FirstName())
                 .RuleFor(x => x.DateOfBirth, y => y.Date.Between(DateTime.Parse("01.01.1950"), DateTime.Parse("01.01.2000")));
@@ -25,6 +25,7 @@ namespace Services
         {
             var generator = new Faker<Employee>("ru")
                 .StrictMode(true)
+                .RuleFor(x => x.ID, y => y.Random.Uuid())
                 .RuleFor(x => x.PassportID, y => y.Random.String2(2).ToUpper() + y.Random.Int(10000, 99999).ToString())
                 .RuleFor(x => x.Name, y => y.Name.FirstName())
                 .RuleFor(x => x.DateOfBirth, y => y.Date.Between(DateTime.Parse("01.01.1950"), DateTime.Parse("01.01.2000")))

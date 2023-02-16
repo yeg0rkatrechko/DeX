@@ -1,0 +1,162 @@
+﻿using Models;
+using DbModels;
+using Services;
+using Services.Filters;
+using Services.Exceptions;
+using System.Linq;
+using Xunit;
+using Services.Storage;
+using System.Security.Principal;
+using Microsoft.EntityFrameworkCore;
+
+namespace ServiceTests
+{
+    public class ClientServiceDBTests
+    {
+
+        [Fact]
+        public async Task AddNewClientUnder18YearsExceptionTest()
+        {
+            // Arrange
+            ClientServiceDB clientServiceDB = new ClientServiceDB();
+
+            Client client = new Client()
+            {
+                Name = "Михаил",
+                PassportID = "AB123456",
+                DateOfBirth = new DateTime(2009, 11, 11),
+            };
+
+            // Act/Assert
+            try
+            {
+                await clientServiceDB.AddClientAsync(client);
+            }
+            catch (Under18 e)
+            {
+                Assert.Equal(typeof(Under18), e.GetType());
+                Assert.Equal("Клиент не может быть младше 18 лет", e.Message);
+            }
+            catch (Exception)
+            {
+                Assert.True(false);
+            }
+
+        }
+
+        [Fact]
+        public async Task AddNewClientNoPassDataExceptionTest()
+        {
+            // Arrange
+            ClientServiceDB clientServiceDB = new ClientServiceDB();
+
+            Client client = new Client()
+            {
+                Name = "Игорь",
+                PassportID = null,
+                DateOfBirth = new DateTime(1998, 1, 2),
+            };
+
+            // Act/Assert
+            try
+            {
+                await clientServiceDB.AddClientAsync(client);
+            }
+            catch (NoPassData e)
+            {
+                Assert.Equal(typeof(NoPassData), e.GetType());
+                Assert.Equal("Вы не ввели паспортные данные", e.Message);
+            }
+            catch (Exception)
+            {
+                Assert.True(false);
+            }
+        }
+
+        [Fact]
+        public async Task AddNewAlreadyExcistingClientTest()
+        {
+            // Arrange
+            ClientServiceDB clientServiceDB = new ClientServiceDB();
+            
+            Client oldClient = FakeDataGenerator.CreateFakeClient();
+
+            Client newClient = new Client()
+            {
+                ID = oldClient.ID,
+                Name = oldClient.Name,
+                PassportID = oldClient.PassportID,
+                DateOfBirth = oldClient.DateOfBirth
+            };
+
+            // Act/Assert
+            try
+            {
+                await clientServiceDB.AddClientAsync(oldClient);
+                await clientServiceDB.AddClientAsync(newClient);
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.Equal(typeof(ArgumentException), ex.GetType());
+                Assert.Equal("Такой клиент уже существует", ex.Message);
+            }
+            catch (Exception)
+            {
+                Assert.True(false);
+            }
+        }
+
+        [Fact]
+        public async Task DeleteClientByNonExcistingKeyTest()
+        {
+            // Arrange
+            ClientServiceDB clientServiceDB = new ClientServiceDB();
+
+            Client existsClient = FakeDataGenerator.CreateFakeClient();
+
+            Client noExistsClient = FakeDataGenerator.CreateFakeClient();
+
+            // Act/Assert
+            try
+            {
+                await clientServiceDB.AddClientAsync(existsClient);
+                await Assert.ThrowsAsync<KeyNotFoundException>(() => clientServiceDB.DeleteClientAsync(noExistsClient));
+
+                await clientServiceDB.DeleteClientAsync(existsClient);
+                Assert.Null(await clientServiceDB.dbContext.Clients.FirstOrDefaultAsync(p => p.Id == existsClient.ID));
+            }
+            catch (Exception)
+            {
+                Assert.True(false);
+            }
+
+        }
+
+        [Fact]
+        public async Task UpdateClientByNonExcistingKeyTest()
+        {
+            // Arrange
+            ClientServiceDB clientServiceDB = new ClientServiceDB();
+
+            Client realClient = FakeDataGenerator.CreateFakeClient();
+
+            Client notExistingClient = FakeDataGenerator.CreateFakeClient();
+
+            // Act/Assert
+            try
+            {
+                await clientServiceDB.AddClientAsync(realClient);
+                await clientServiceDB.UpdateClientAsync(notExistingClient);
+
+                await Assert.ThrowsAsync<KeyNotFoundException>(() => clientServiceDB.UpdateClientAsync(notExistingClient));
+
+            }
+            catch (Exception)
+            {
+                Assert.True(false);
+            }
+
+        }
+
+    }
+}

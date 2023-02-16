@@ -28,6 +28,16 @@ namespace Services
             }
             return dbContext.Employees.FirstOrDefault(c => c.Id == employeeID);
         }
+        //public async Task<EmployeeDB> GetEmployeeAsync(Guid id)
+        //{
+
+        //    var employeeDb = await dbContext.Employees.FirstOrDefaultAsync(p => p.Id == id);
+        //    if (employeeDb == null)
+        //    {
+        //        throw new ExistenceException("Этого работника не сущетсвует");
+        //    }
+        //    return dbContext.Employees.FirstOrDefault(c => c.Id == id);
+        //}
         public List<Employee> GetEmployees(EmployeesFilter employeeFilter) 
         {
             var selection = dbContext.Employees.Select(p => p);
@@ -81,6 +91,25 @@ namespace Services
             }
             dbContext.Employees.Add(employeeDb);
             dbContext.SaveChanges();
+        }
+        public async Task AddEmployeeAsync(Employee employee)
+        {
+            var employeeDb = new EmployeeDB
+            {
+                Id = employee.ID,
+                Name = employee.Name,
+                PassportID = employee.PassportID,
+                DateOfBirth = employee.DateOfBirth,
+            };
+
+            if ((DateTime.Now - employee.DateOfBirth).Days < 18)
+                throw new Under18("Сотрудник должен быть старше 18 лет");
+
+            if (employee.PassportID == null)
+                throw new NoPassData("Вы не ввели паспортные данные");
+            await dbContext.Employees.AddAsync(employeeDb);
+            await dbContext.SaveChangesAsync();
+
         }
         public void UpdateEmployee(Employee employee)
         {

@@ -5,17 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Services.Exceptions;
 using Models;
+using DbModels;
 
 namespace Services
 {
     public class ClientService
     {
-        public BankContext dbContext;
-        public ClientService() 
-        {
-            dbContext= new BankContext();
-        }
-
         private Dictionary<Client, List<Account>> tempStorage;
         public void ClientAdd()
         {
