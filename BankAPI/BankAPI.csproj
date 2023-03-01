@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbModels\DbModels.csproj" />
-    <ProjectReference Include="..\DeX\DeX.csproj" />
     <ProjectReference Include="..\ExportTool\ExportTool.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\PracticeWithTypes\PracticeWithTypes.csproj" />

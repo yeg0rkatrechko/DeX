@@ -7,7 +7,7 @@ namespace Services
         {
             return (int)((profit - expenses) / numberOfOwners);
         }
-        static public Employee ClientToEmployee (Client client)
+        static public Employee ClientToEmployee(Client client)
         {
             Employee employee = new Employee()
             {

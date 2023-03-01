@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-
-namespace Models
+﻿namespace Models
 {
-    public class Employee : Person 
+    public class Employee : Person
     {
         public string Contract { get; set; }
         public decimal Salary { get; set; }

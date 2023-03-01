@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DbModels;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services;
-using DbModels;
 
 namespace BankAPI.Controllers
 {

@@ -1,13 +1,8 @@
-﻿using Models;
-using DbModels;
+﻿using Microsoft.EntityFrameworkCore;
+using Models;
 using Services;
-using Services.Filters;
 using Services.Exceptions;
-using System.Linq;
 using Xunit;
-using Services.Storage;
-using System.Security.Principal;
-using Microsoft.EntityFrameworkCore;
 
 namespace ServiceTests
 {
@@ -78,7 +73,7 @@ namespace ServiceTests
         {
             // Arrange
             ClientServiceDB clientServiceDB = new ClientServiceDB();
-            
+
             Client oldClient = FakeDataGenerator.CreateFakeClient();
 
             Client newClient = new Client()

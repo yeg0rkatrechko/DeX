@@ -1,15 +1,8 @@
-﻿using Bogus.DataSets;
-using DbModels;
+﻿using DbModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using Models;
 using Services.Exceptions;
 using Services.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
@@ -142,7 +135,7 @@ namespace Services
 
             await dbContext.SaveChangesAsync();
         }
-        public void AddAccount(Guid clientID) 
+        public void AddAccount(Guid clientID)
         {
             var accountDb = new AccountDB()
             {
@@ -179,7 +172,7 @@ namespace Services
 
             if (clientDb == null)
                 throw new ExistenceException("Данного клиента не существует");
-            
+
             clientDb.Id = client.ID;
             clientDb.Name = client.Name;
             clientDb.PassportID = client.PassportID;

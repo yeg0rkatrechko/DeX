@@ -1,10 +1,9 @@
 ﻿using CsvHelper;
+using Models;
+using Newtonsoft.Json;
 using System.Globalization;
 using System.Text;
-using Models;
 using DbModels;
-using Newtonsoft.Json;
-using Microsoft.EntityFrameworkCore;
 
 namespace Services;
 
@@ -62,7 +61,7 @@ public class ExportService
         }
     }
 
-    public async Task <List<Client>> ReadClientFromCsv(string path, string fileName)
+    public async Task<List<Client>> ReadClientFromCsv(string path, string fileName)
     {
         DirectoryInfo dirInfo = new DirectoryInfo(_path);
         if (!dirInfo.Exists)

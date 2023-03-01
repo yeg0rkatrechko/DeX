@@ -1,10 +1,4 @@
-﻿using Bogus.DataSets;
-using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Models;
 
 namespace Services.Storage
 {
@@ -29,8 +23,8 @@ namespace Services.Storage
         {
             Data[client].Add(account);
         }
-        public void Delete(Client client) 
-        { 
+        public void Delete(Client client)
+        {
             Data.Remove(client);
         }
         public void DeleteAccount(Client client, Account account)

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using Models;
+﻿using Models;
 using Services;
-using DbModels;
+using Xunit;
 
 namespace ServiceTests
 {
@@ -16,7 +10,7 @@ namespace ServiceTests
         public async void ExportClientsToCsvFromDBTest()
         {
             //Arrenge
-            DbModels.BankContext bankContext = new DbModels.BankContext(); 
+            DbModels.BankContext bankContext = new DbModels.BankContext();
 
             string directoryPath = Path.Combine("C:", "Users", "katre", "Desktop", "ExportTest");
             string fileName = "clientsFromDb.csv";
@@ -24,7 +18,7 @@ namespace ServiceTests
             ExportService exportService = new ExportService(directoryPath, fileName);
 
             List<Client> clients = new List<Client>();
-            foreach(var client in bankContext.Clients)
+            foreach (var client in bankContext.Clients)
             {
                 clients.Add(new Client
                 {
@@ -34,7 +28,7 @@ namespace ServiceTests
                     DateOfBirth = client.DateOfBirth
                 });
             }
-            
+
 
             //Act
             await exportService.ExportClientToCsv(clients);
@@ -66,7 +60,7 @@ namespace ServiceTests
 
             clientsFromCsv = await exportService.ReadClientFromCsv(directoryPath, fileName);
 
-            foreach(var client in clientsFromCsv)
+            foreach (var client in clientsFromCsv)
             {
                 await clientServiceDB.AddClientAsync(client);
             }

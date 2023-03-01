@@ -1,7 +1,7 @@
 ﻿using Models;
 using Services;
 
-Employee Gosha = new Employee("Gosha Berbat", "Frontend",  1000);
+Employee Gosha = new Employee("Gosha Berbat", "Frontend", 1000);
 Currency Dollar = new Currency("Dollar", 51);
 
 void UpdateContract(Employee employee, string _contract)
@@ -12,7 +12,7 @@ UpdateContract(Gosha, "Backend");
 
 
 void UpdateCurrency(Currency currency, int _code)
-{ 
+{
     currency.Code = _code;
     Console.WriteLine(currency.Code);
     Dollar = new Currency("Ruble", 512);

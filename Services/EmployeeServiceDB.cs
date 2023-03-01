@@ -1,12 +1,6 @@
-﻿using Models;
-using DbModels;
+﻿using DbModels;
+using Models;
 using Services.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Services.Filters;
 
 namespace Services
@@ -14,11 +8,11 @@ namespace Services
     public class EmployeeServiceDB
     {
         public BankContext dbContext;
-        public EmployeeServiceDB() 
+        public EmployeeServiceDB()
         {
             dbContext = new BankContext();
         }
-        public EmployeeDB GetEmployee(Guid employeeID) 
+        public EmployeeDB GetEmployee(Guid employeeID)
         {
             var employee = dbContext.Employees.FirstOrDefault(c => c.Id == employeeID);
 
@@ -38,7 +32,7 @@ namespace Services
         //    }
         //    return dbContext.Employees.FirstOrDefault(c => c.Id == id);
         //}
-        public List<Employee> GetEmployees(EmployeesFilter employeeFilter) 
+        public List<Employee> GetEmployees(EmployeesFilter employeeFilter)
         {
             var selection = dbContext.Employees.Select(p => p);
 

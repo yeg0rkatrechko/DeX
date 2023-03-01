@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DbModels
 {
@@ -20,7 +15,7 @@ namespace DbModels
         public string Name { get; set; }
 
         [Column(name: "Birth_Date")]
-        public DateTime DateOfBirth { get; set; }        
+        public DateTime DateOfBirth { get; set; }
 
         [Column(name: "Salary")]
         public int Salary { get; set; }

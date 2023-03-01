@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-using Bogus;
+﻿using Bogus;
 using Models;
 
 namespace Services
@@ -21,7 +15,7 @@ namespace Services
                 .RuleFor(x => x.DateOfBirth, y => y.Date.Between(DateTime.Parse("01.01.1950"), DateTime.Parse("01.01.2000")));
             return generator;
         }
-        public static Faker<Employee> CreateFakeEmployee() 
+        public static Faker<Employee> CreateFakeEmployee()
         {
             var generator = new Faker<Employee>("ru")
                 .StrictMode(true)
@@ -33,11 +27,11 @@ namespace Services
                 .RuleFor(x => x.Salary, y => y.Random.Int(10, 90) * 100);
             return generator;
         }
-       
+
         public static List<Client> CreateClientsList(int Count)
         {
             var ListOfClients = new List<Client>();
-            for(int i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 ListOfClients.Add(CreateFakeClient());
             }
@@ -46,17 +40,17 @@ namespace Services
         public static Dictionary<string, Client> CreateClientsDictionary(int Count)
         {
             var DictionaryOfClients = new Dictionary<string, Client>();
-            for(int i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 Client temp = CreateFakeClient();
                 DictionaryOfClients.Add((temp.PassportID + i.ToString()), (temp));
             }
             return DictionaryOfClients;
         }
-        public static List<Employee> CreateEmployeeList(int Count) 
+        public static List<Employee> CreateEmployeeList(int Count)
         {
             var ListOfEmployee = new List<Employee>();
-            for(int i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 ListOfEmployee.Add(CreateFakeEmployee());
             }

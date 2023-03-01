@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Models;
 using Services;
-using Models;
+using Xunit;
 namespace ServiceTests
 {
     public class CurrencyServiceTests

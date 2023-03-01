@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-
-namespace Models
+﻿namespace Models
 {
     public class Client : Person
     {
         public Client() { }
-        public Client(string _passportID, string _name) 
+        public Client(string _passportID, string _name)
         {
             PassportID = _passportID;
             Name = _name;
