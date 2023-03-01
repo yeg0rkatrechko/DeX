@@ -9,14 +9,12 @@ namespace DbModels
 {
     public class BankContext : DbContext
     {
+        public BankContext(DbContextOptions<BankContext> options) : base(options)
+        {
+        }
+
         public DbSet<ClientDB> Clients => Set<ClientDB>();
         public DbSet<EmployeeDB>  Employees => Set<EmployeeDB>();
         public DbSet<AccountDB> Account => Set<AccountDB>();
-        public BankContext() => Database.EnsureCreated();
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-GFDH238\SQLEXPRESS;Database=bankdb;Trusted_Connection=True;");
-        }
     }
 }

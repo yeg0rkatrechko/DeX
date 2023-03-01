@@ -13,24 +13,24 @@ namespace Services
 {
     public class EmployeeServiceDB
     {
-        public BankContext dbContext;
-        public EmployeeServiceDB() 
+        public readonly BankContext DbContext;
+        public EmployeeServiceDB(BankContext dbContext) 
         {
-            dbContext = new BankContext();
+            DbContext = dbContext;
         }
         public EmployeeDB GetEmployee(Guid employeeID) 
         {
-            var employee = dbContext.Employees.FirstOrDefault(c => c.Id == employeeID);
+            var employee = DbContext.Employees.FirstOrDefault(c => c.Id == employeeID);
 
             if (employee == null)
             {
                 throw new ExistenceException("Этого работника не сущетсвует");
             }
-            return dbContext.Employees.FirstOrDefault(c => c.Id == employeeID);
+            return DbContext.Employees.FirstOrDefault(c => c.Id == employeeID);
         }
         public List<Employee> GetEmployees(EmployeesFilter employeeFilter) 
         {
-            var selection = dbContext.Employees.Select(p => p);
+            var selection = DbContext.Employees.Select(p => p);
 
             if (employeeFilter.Name != null)
                 selection = selection.
@@ -79,30 +79,30 @@ namespace Services
             {
                 throw new Under18("Работник не может быть младше 18-ти лет");
             }
-            dbContext.Employees.Add(employeeDb);
-            dbContext.SaveChanges();
+            DbContext.Employees.Add(employeeDb);
+            DbContext.SaveChanges();
         }
         public void UpdateEmployee(Employee employee)
         {
-            var employeeDb = dbContext.Employees.FirstOrDefault(c => c.Id == employee.ID);
+            var employeeDb = DbContext.Employees.FirstOrDefault(c => c.Id == employee.ID);
 
             if (employeeDb == null)
             {
                 throw new ExistenceException("Данного работника не существует");
             }
 
-            dbContext.Employees.Update(employeeDb);
-            dbContext.SaveChanges();
+            DbContext.Employees.Update(employeeDb);
+            DbContext.SaveChanges();
         }
         public void DeleteEmployee(Employee employee)
         {
-            var employeeDb = dbContext.Employees.FirstOrDefault(c => c.Id == employee.ID);
+            var employeeDb = DbContext.Employees.FirstOrDefault(c => c.Id == employee.ID);
             if (employeeDb == null)
             {
                 throw new ExistenceException("Работник с данным ID отсутсвтует в базе");
             }
-            dbContext.Employees.Remove(employeeDb);
-            dbContext.SaveChanges();
+            DbContext.Employees.Remove(employeeDb);
+            DbContext.SaveChanges();
         }
     }
 }

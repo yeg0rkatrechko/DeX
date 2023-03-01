@@ -11,9 +11,9 @@ namespace BankAPI.Controllers
     public class ClientController : ControllerBase
     {
         private ClientServiceDB _clientService;
-        public ClientController()
+        public ClientController(ClientServiceDB clientService)
         {
-            _clientService = new ClientServiceDB();
+            _clientService = clientService;
         }
 
         [HttpGet]

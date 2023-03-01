@@ -13,18 +13,18 @@ namespace Services
     public class RateUpdaterService
     {
         private ClientServiceDB _clientService;
-        public RateUpdaterService(ClientServiceDB clientService)
+        private BankContext _dbContext;
+        public RateUpdaterService(ClientServiceDB clientService, BankContext dbContext)
         {
             _clientService = clientService;
+            _dbContext = dbContext;
         }
 
         public async Task AccruingInterestAsync(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
-                BankContext _bankContext = new BankContext();
-
-                var accountsDb = _bankContext.Account.Take(10).ToList();
+                var accountsDb = _dbContext.Account.Take(10).ToList();
 
                 foreach (var accountDb in accountsDb)
                 {
@@ -39,10 +39,10 @@ namespace Services
                     };
 
                     account.Amount += 5;
-                    _clientService.UpdateAccountAsync(accountDb.ClientId, account);
+                    await _clientService.UpdateAccountAsync(accountDb.ClientId, account);
                 }
 
-                Task.Delay(1000).Wait();
+                await Task.Delay(1000).WaitAsync(token);
             }
         }
     }

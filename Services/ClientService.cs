@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DbModels;
 using Services.Exceptions;
 using Models;
 
@@ -10,13 +11,13 @@ namespace Services
 {
     public class ClientService
     {
-        public BankContext dbContext;
-        public ClientService() 
+        private BankContext _dbContext;
+        public ClientService(BankContext dbContext)
         {
-            dbContext= new BankContext();
+            _dbContext = dbContext;
         }
 
-        private Dictionary<Client, List<Account>> tempStorage;
+        private Dictionary<Client, List<Account>> _tempStorage;
         public void ClientAdd()
         {
             string tempPassID;
@@ -34,13 +35,13 @@ namespace Services
             DOB = new DateTime(year, month, day);
             if (DateTime.Now.Year - DOB.Year < 18) {throw new Under18("Клиент должен быть совершеннолетним");}
             Client client = new Client(tempPassID, DOB, tempName);
-            tempStorage.Add(client, (new List<Account> { new Account() }));
+            _tempStorage.Add(client, (new List<Account> { new Account() }));
         }
         public void DictionaryOutput()
         {
-            foreach (var temp in tempStorage)
+            foreach (var temp in _tempStorage)
             {
-                Console.WriteLine(tempStorage.Keys);
+                Console.WriteLine(_tempStorage.Keys);
             }
         }
     }

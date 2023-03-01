@@ -15,11 +15,11 @@ namespace ExportTool
         private string _csvName { get; set; }
         public BankContext dbContext;
 
-        public ExportService(string path, string csvName)
+        public ExportService(BankContext baseContext, string path, string csvName)
         {
             _path = path;
             _csvName = csvName;
-            dbContext = new BankContext();
+            dbContext = baseContext;
         }
 
         public void ExportClientToCsv(List<ClientDB> clients)

@@ -1,55 +1,48 @@
-﻿using Bogus.DataSets;
-using DbModels;
+﻿using DbModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using Models;
 using Services.Exceptions;
 using Services.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
     public class ClientServiceDB
     {
-        public BankContext dbContext;
-        public ClientServiceDB()
+        private readonly BankContext _dbContext;
+        public ClientServiceDB(BankContext dbContext)
         {
-            dbContext = new BankContext();
+            _dbContext = dbContext;
         }
         public ClientDB GetClient(Guid clientID)
         {
-            var client = dbContext.Clients.FirstOrDefault(c => c.Id == clientID);
+            var client = _dbContext.Clients.FirstOrDefault(c => c.Id == clientID);
 
             if (client == null)
             {
                 throw new ExistenceException("Этого клиента не сущетсвует");
             }
-            return dbContext.Clients.FirstOrDefault(c => c.Id == clientID);
+            return _dbContext.Clients.FirstOrDefault(c => c.Id == clientID);
         }
         public async Task<ClientDB> GetClientAsync(Guid clientID)
         {
 
-            var client = await dbContext.Clients.FirstOrDefaultAsync(c => c.Id == clientID);
+            var client = await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == clientID);
 
-            return dbContext.Clients.FirstOrDefault(c => c.Id == clientID);
+            return _dbContext.Clients.FirstOrDefault(c => c.Id == clientID);
         }
         public ClientDB GetClientByPassID(string clientPassID)
         {
-            var client = dbContext.Clients.FirstOrDefault(c => c.PassportID == clientPassID);
+            var client = _dbContext.Clients.FirstOrDefault(c => c.PassportID == clientPassID);
 
             if (client == null)
             {
                 throw new ExistenceException("Этого клиента не сущетсвует");
             }
-            return dbContext.Clients.FirstOrDefault(c => c.PassportID == clientPassID);
+            return _dbContext.Clients.FirstOrDefault(c => c.PassportID == clientPassID);
         }
         public List<Client> GetClients(ClientsFilter clientFilter)
         {
-            var selection = dbContext.Employees.Select(p => p);
+            var selection = _dbContext.Employees.Select(p => p);
 
             if (clientFilter.Name != null)
                 selection = selection.
@@ -94,8 +87,8 @@ namespace Services
             {
                 throw new Under18("Клиент не может быть младше 18-ти лет");
             }
-            dbContext.Clients.Add(clientDb);
-            dbContext.Account.Add(new AccountDB
+            _dbContext.Clients.Add(clientDb);
+            _dbContext.Account.Add(new AccountDB
             {
                 Amount = 0,
                 ClientId = clientDb.Id,
@@ -105,7 +98,7 @@ namespace Services
                     Code = 1
                 }
             });
-            dbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
         public async Task AddClientAsync(Client client)
         {
@@ -124,12 +117,12 @@ namespace Services
             if (clientDb.PassportID == null)
                 throw new NoPassData("Вы не ввели паспортные данные");
 
-            if (await dbContext.Clients.FirstOrDefaultAsync(p => p.Id == client.ID) != null)
+            if (await _dbContext.Clients.FirstOrDefaultAsync(p => p.Id == client.ID) != null)
                 throw new ArgumentException("Такой клиент уже существует");
 
-            await dbContext.Clients.AddAsync(clientDb);
+            await _dbContext.Clients.AddAsync(clientDb);
 
-            await dbContext.Account.AddAsync(new AccountDB
+            await _dbContext.Account.AddAsync(new AccountDB
             {
                 Amount = 0,
                 ClientId = client.ID,
@@ -140,7 +133,7 @@ namespace Services
                 }
             });
 
-            await dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
         public void AddAccount(Guid clientID) 
         {
@@ -154,12 +147,12 @@ namespace Services
                     Code = 1
                 }
             };
-            dbContext.Account.Add(accountDb);
-            dbContext.SaveChanges();
+            _dbContext.Account.Add(accountDb);
+            _dbContext.SaveChanges();
         }
         public void UpdateClient(Client client)
         {
-            var clientDb = dbContext.Clients.FirstOrDefault(c => c.Id == client.ID);
+            var clientDb = _dbContext.Clients.FirstOrDefault(c => c.Id == client.ID);
 
             if (clientDb == null)
             {
@@ -171,12 +164,12 @@ namespace Services
             clientDb.DateOfBirth = client.DateOfBirth;
             clientDb.Bonus = 0;
 
-            dbContext.Clients.Update(clientDb);
-            dbContext.SaveChanges();
+            _dbContext.Clients.Update(clientDb);
+            _dbContext.SaveChanges();
         }
         public async Task UpdateClientAsync(Client client)
         {
-            var clientDb = await dbContext.Clients.FirstOrDefaultAsync(p => p.Id == client.ID);
+            var clientDb = await _dbContext.Clients.FirstOrDefaultAsync(p => p.Id == client.ID);
 
             if (clientDb == null)
                 throw new KeyNotFoundException("Данного клиента не существует");
@@ -186,57 +179,57 @@ namespace Services
             clientDb.DateOfBirth = client.DateOfBirth;
             clientDb.Bonus = 0;
 
-            dbContext.Clients.Update(clientDb);
-            await dbContext.SaveChangesAsync();
+            _dbContext.Clients.Update(clientDb);
+            await _dbContext.SaveChangesAsync();
 
         }
         public void DeleteClient(Client client)
         {
-            var clientDb = dbContext.Clients.FirstOrDefault(c => c.Id == client.ID);
+            var clientDb = _dbContext.Clients.FirstOrDefault(c => c.Id == client.ID);
             if (clientDb == null)
             {
                 throw new ExistenceException("Клиент с данным ID отсутствует в базе");
             }
-            dbContext.Clients.Remove(clientDb);
-            dbContext.SaveChanges();
+            _dbContext.Clients.Remove(clientDb);
+            _dbContext.SaveChanges();
         }
         public async Task DeleteClientAsync(Client client)
         {
-            var clientDb = await dbContext.Clients.FirstOrDefaultAsync(c => c.Id == client.ID);
+            var clientDb = await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == client.ID);
 
             if (clientDb == null)
             {
                 throw new KeyNotFoundException("В базе нет такого клиента");
             }
-            dbContext.Clients.Remove(clientDb);
-            await dbContext.SaveChangesAsync();
+            _dbContext.Clients.Remove(clientDb);
+            await _dbContext.SaveChangesAsync();
 
         }
         public void DeleteAccount(Client client)
         {
-            var clientDb = dbContext.Clients.FirstOrDefault(c => c.Id == client.ID);
+            var clientDb = _dbContext.Clients.FirstOrDefault(c => c.Id == client.ID);
             if (clientDb == null)
             {
                 throw new ExistenceException("Клиент с данным ID отсутствует в базе");
             }
-            var accountDb = dbContext.Account.FirstOrDefault(a => a.ClientId == client.ID);
-            dbContext.Account.Remove(accountDb);
-            dbContext.SaveChanges();
+            var accountDb = _dbContext.Account.FirstOrDefault(a => a.ClientId == client.ID);
+            _dbContext.Account.Remove(accountDb);
+            _dbContext.SaveChanges();
         }
         public async Task UpdateAccountAsync(Guid id, Account account)
         {
-            if (await dbContext.Clients.FirstOrDefaultAsync(p => p.Id == id) == null)
+            if (await _dbContext.Clients.FirstOrDefaultAsync(p => p.Id == id) == null)
                 throw new KeyNotFoundException("Этого клиента не сущетсвует");
 
-            var accountDb = await dbContext.Account.FirstOrDefaultAsync(p => p.ClientId == id/* && p =>*/);
+            var accountDb = await _dbContext.Account.FirstOrDefaultAsync(p => p.ClientId == id/* && p =>*/);
 
             //if (accountDb == null)
             //    throw new NullReferenceException("У клиента нет такого счета");
 
             accountDb.Amount = account.Amount;
 
-            dbContext.Account.Update(accountDb);
-            await dbContext.SaveChangesAsync();
+            _dbContext.Account.Update(accountDb);
+            await _dbContext.SaveChangesAsync();
 
         }
     }
