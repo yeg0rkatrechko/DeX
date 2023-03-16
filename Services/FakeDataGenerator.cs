@@ -75,12 +75,12 @@ namespace Services
         {
             Dictionary<Client, List<Account>> accountDictionary = new Dictionary<Client, List<Account>>();
             accountDictionary.Add(
-                new Client("AB12345", new DateTime(1998, 10, 30), "Yegor Katrechko"),
+                new Client {PassportID = "AB12345", DateOfBirth = new DateTime(1998, 10, 30), Name = "Yegor" },
                 (new List<Account>
                 {new Account {Currency = new Currency("USD", 1), Amount = 100},
                 new Account {Currency = new Currency("EUR", 2), Amount = 10}}));
             accountDictionary.Add(
-                new Client("AB54321", new DateTime(1995, 12, 04), "Katya Burlova"),
+                new Client{ PassportID = "AB54321", DateOfBirth = new DateTime(1995, 12, 04), Name = "Katya" },
                 (new List<Account>
                 {new Account {Currency = new Currency("USD", 1), Amount = 120},
                 new Account {Currency = new Currency("EUR", 2), Amount = 0}}));

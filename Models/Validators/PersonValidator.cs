@@ -7,6 +7,8 @@ namespace Models.Validators
         public PersonValidator()
         {
             RuleFor(p => p.Name).NotEmpty();
+            RuleFor(p => p.PassportID).NotEmpty();
+            RuleFor(p => p.DateOfBirth).NotEmpty();
         }
     }
 }

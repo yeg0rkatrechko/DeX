@@ -5,8 +5,8 @@ namespace Services
 {
     public class RateUpdaterService
     {
-        private ClientServiceDB _clientService;
-        public RateUpdaterService(ClientServiceDB clientService)
+        private ClientService _clientService;
+        public RateUpdaterService(ClientService clientService)
         {
             _clientService = clientService;
         }

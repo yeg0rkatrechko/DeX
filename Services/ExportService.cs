@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Globalization;
 using System.Text;
 using DbModels;
+using Services.Exceptions;
 
 namespace Services;
 
@@ -65,9 +66,7 @@ public class ExportService
     {
         DirectoryInfo dirInfo = new DirectoryInfo(_path);
         if (!dirInfo.Exists)
-        {
-            dirInfo.Create();
-        }
+            throw new NonExistingDirectory("Данного пути не существует");
         string fullPath = Path.Combine(_path, _csvName);
 
         using (FileStream fileStream = new FileStream(fullPath, FileMode.OpenOrCreate))
@@ -103,9 +102,7 @@ public class ExportService
         DirectoryInfo dirInfo = new DirectoryInfo(path);
 
         if (!dirInfo.Exists)
-        {
-            dirInfo.Create();
-        }
+            throw new NonExistingDirectory("Данного пути не существует");
 
         string fullPath = Path.Combine(path, fileName);
         using (StreamReader reader = new StreamReader(fullPath))
