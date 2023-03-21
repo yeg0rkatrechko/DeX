@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace Models
 {
@@ -15,12 +10,12 @@ namespace Models
 
 
         public Currency() { }
-        public Currency(string _name, int _code) 
+        public Currency(string _name, int _code)
         {
             Code = _code;
             Name = _name;
         }
-        
+
 
     }
 }

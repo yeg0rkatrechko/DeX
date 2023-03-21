@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeX
+﻿namespace DeX
 {
-public class QueueTest
+    public class QueueTest
     {
         private readonly int _threshold;
         public Queue<string> PeopleQueue = new Queue<string>();
@@ -15,7 +8,7 @@ public class QueueTest
         public event EventHandler ThresholdReached;
         private int Counter = 0;
         public QueueTest(int threshold)
-        { 
+        {
             _threshold = threshold;
         }
         public void FilQueue(List<string> persons)
@@ -35,7 +28,7 @@ public class QueueTest
         }
         public void PrintPeople()
         {
-            foreach (var item in PeopleQueue) 
+            foreach (var item in PeopleQueue)
             {
                 Console.WriteLine(item);
                 Thread.Sleep(1000);

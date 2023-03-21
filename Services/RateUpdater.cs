@@ -1,19 +1,12 @@
 ﻿using Models;
 using DbModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Bogus.DataSets;
 
 namespace Services
 {
     public class RateUpdaterService
     {
-        private ClientServiceDB _clientService;
-        public RateUpdaterService(ClientServiceDB clientService)
+        private ClientService _clientService;
+        public RateUpdaterService(ClientService clientService)
         {
             _clientService = clientService;
         }

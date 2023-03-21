@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-using Bogus;
+﻿using Bogus;
 using Models;
 
 namespace Services
@@ -13,18 +7,19 @@ namespace Services
     {
         public static Faker<Client> CreateFakeClient()
         {
-            var id = 0;
             var generator = new Faker<Client>("ru")
                 .StrictMode(true)
+                .RuleFor(x => x.ID, y => y.Random.Uuid())
                 .RuleFor(x => x.PassportID, y => y.Random.String2(2).ToUpper() + y.Random.Int(1000, 9999).ToString())
                 .RuleFor(x => x.Name, y => y.Name.FirstName())
                 .RuleFor(x => x.DateOfBirth, y => y.Date.Between(DateTime.Parse("01.01.1950"), DateTime.Parse("01.01.2000")));
             return generator;
         }
-        public static Faker<Employee> CreateFakeEmployee() 
+        public static Faker<Employee> CreateFakeEmployee()
         {
             var generator = new Faker<Employee>("ru")
                 .StrictMode(true)
+                .RuleFor(x => x.ID, y => y.Random.Uuid())
                 .RuleFor(x => x.PassportID, y => y.Random.String2(2).ToUpper() + y.Random.Int(10000, 99999).ToString())
                 .RuleFor(x => x.Name, y => y.Name.FirstName())
                 .RuleFor(x => x.DateOfBirth, y => y.Date.Between(DateTime.Parse("01.01.1950"), DateTime.Parse("01.01.2000")))
@@ -32,11 +27,11 @@ namespace Services
                 .RuleFor(x => x.Salary, y => y.Random.Int(10, 90) * 100);
             return generator;
         }
-       
+
         public static List<Client> CreateClientsList(int Count)
         {
             var ListOfClients = new List<Client>();
-            for(int i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 ListOfClients.Add(CreateFakeClient());
             }
@@ -45,17 +40,17 @@ namespace Services
         public static Dictionary<string, Client> CreateClientsDictionary(int Count)
         {
             var DictionaryOfClients = new Dictionary<string, Client>();
-            for(int i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 Client temp = CreateFakeClient();
                 DictionaryOfClients.Add((temp.PassportID + i.ToString()), (temp));
             }
             return DictionaryOfClients;
         }
-        public static List<Employee> CreateEmployeeList(int Count) 
+        public static List<Employee> CreateEmployeeList(int Count)
         {
             var ListOfEmployee = new List<Employee>();
-            for(int i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 ListOfEmployee.Add(CreateFakeEmployee());
             }
@@ -80,12 +75,12 @@ namespace Services
         {
             Dictionary<Client, List<Account>> accountDictionary = new Dictionary<Client, List<Account>>();
             accountDictionary.Add(
-                new Client("AB12345", new DateTime(1998, 10, 30), "Yegor Katrechko"),
+                new Client {PassportID = "AB12345", DateOfBirth = new DateTime(1998, 10, 30), Name = "Yegor" },
                 (new List<Account>
                 {new Account {Currency = new Currency("USD", 1), Amount = 100},
                 new Account {Currency = new Currency("EUR", 2), Amount = 10}}));
             accountDictionary.Add(
-                new Client("AB54321", new DateTime(1995, 12, 04), "Katya Burlova"),
+                new Client{ PassportID = "AB54321", DateOfBirth = new DateTime(1995, 12, 04), Name = "Katya" },
                 (new List<Account>
                 {new Account {Currency = new Currency("USD", 1), Amount = 120},
                 new Account {Currency = new Currency("EUR", 2), Amount = 0}}));

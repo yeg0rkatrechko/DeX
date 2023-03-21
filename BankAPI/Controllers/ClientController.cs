@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DbModels;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services;
-using DbModels;
 
 namespace BankAPI.Controllers
 {
@@ -10,34 +10,38 @@ namespace BankAPI.Controllers
     [Route("[controller]")]
     public class ClientController : ControllerBase
     {
-        private ClientServiceDB _clientService;
-        public ClientController()
+        private readonly ClientService _clientService;
+        public ClientController(ClientService clientServiceDB)
         {
-            _clientService = new ClientServiceDB();
+            _clientService = clientServiceDB;
         }
 
-        [HttpGet]
-        public async Task<ClientDB> GetClient(Guid id)
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDB))]
+        public async Task<IActionResult> GetClient(Guid id)
         {
-            return await _clientService.GetClientAsync(id);
+            return Ok(await _clientService.GetClientAsync(id));
         }
 
         [HttpPost]
-        public async Task AddClient(Client client)
+        public async Task<IActionResult> AddClient(Client client)
         {
             await _clientService.AddClientAsync(client);
+            return NoContent();
         }
 
         [HttpDelete]
-        public async Task DeleteClient(Client client)
+        public async Task<IActionResult> DeleteClient(Guid Id)
         {
-            await _clientService.DeleteClientAsync(client);
+            await _clientService.DeleteClientAsync(Id);
+            return NoContent();
         }
 
         [HttpPut]
-        public async Task UpdateClient(Client client)
+        public async Task<IActionResult> UpdateClient(Client client)
         {
             await _clientService.UpdateClientAsync(client);
+            return NoContent();
         }
     }
 }

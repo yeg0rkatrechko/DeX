@@ -1,4 +1,4 @@
-﻿namespace BankContext
+﻿namespace ExportTools
 {
     public class Class1
     {

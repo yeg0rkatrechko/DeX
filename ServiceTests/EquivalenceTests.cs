@@ -10,7 +10,7 @@ namespace ServiceTests
         {
             var testDictionary = FakeDataGenerator.CreateAccountDictionary();
             var firstAccount = testDictionary.First();
-            Client testClient = new Client("AB12345", new DateTime(1998, 10, 30), "Yegor Katrechko");
+            Client testClient = new Client {PassportID = "AB12345", Name = "Yegor", DateOfBirth = new DateTime(1998, 10, 30) };
             Assert.Equal(firstAccount.Key, testClient);
         }
         [Fact]
@@ -35,5 +35,5 @@ namespace ServiceTests
             Assert.Equal(expectedAccount, actualAccount);
         }
     }
-   
+
 }
