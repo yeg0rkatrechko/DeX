@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DbModels
 {
@@ -9,7 +8,7 @@ namespace DbModels
     {
         private readonly IConfiguration _configuration;
 
-        public BankContext(IConfiguration configuration)
+        public BankContext(DbContextOptionsBuilder optionsBuilder, IConfiguration configuration) : base(optionsBuilder.Options)
         {
             _configuration = configuration;
         }

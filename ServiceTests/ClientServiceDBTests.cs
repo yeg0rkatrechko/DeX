@@ -3,79 +3,99 @@ using Models;
 using Services;
 using Services.Exceptions;
 using Xunit;
+using DbModels;
+using AutoMapper;
+using Services.Mapping;
+using Microsoft.Extensions.Configuration;
 
 namespace ServiceTests
 {
-    /// <summary>
-    /// После того как сделал инжекцию dbContext сломались тесты, не разобрался, как починить
-    /// </summary>
     public class ClientServiceDBTests
     {
+        private readonly IMapper _mapper;
+        private readonly BankContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        //[Fact]
-        //public async Task AddNewClientUnder18YearsExceptionTest()
-        //{
-        //    // Arrange
-        //    ClientService clientServiceDB = new ClientServiceDB();
+        public ClientServiceDBTests()
+        {
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
+            _mapper = mapperConfig.CreateMapper();
 
-        //    Client client = new Client()
-        //    {
-        //        Name = "Михаил",
-        //        PassportID = "AB123456",
-        //        DateOfBirth = new DateTime(2009, 11, 11),
-        //    };
+            _configuration = new ConfigurationBuilder()
+                .SetBasePath("C:\\Users\\katre\\Source\\Repos\\yeg0rkatrechko\\DeX\\BankAPI")
+                .AddJsonFile("appsettings.json")
+                .Build();
 
-        //    // Act/Assert
-        //    try
-        //    {
-        //        await clientServiceDB.AddClientAsync(client);
-        //    }
-        //    catch (Under18 e)
-        //    {
-        //        Assert.Equal(typeof(Under18), e.GetType());
-        //        Assert.Equal("Клиент не может быть младше 18 лет", e.Message);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Assert.True(false);
-        //    }
+            var optionsBuilder = new DbContextOptionsBuilder<BankContext>()
+                .UseInMemoryDatabase(databaseName: "TestDB");
+            _dbContext = new BankContext(optionsBuilder, _configuration);
+        }
 
-        //}
+        [Fact]
+        public async Task AddClientAsync_Should_Throw_Exception_When_Client_Under_18()
+        {
+            // Arrange
+            var clientService = new ClientService(_mapper, _dbContext);
 
-        //[Fact]
-        //public async Task AddNewClientNoPassDataExceptionTest()
-        //{
-        //    // Arrange
-        //    ClientService clientServiceDB = new ClientServiceDB();
+            var clientToAdd = new Client {
+                    Name = "Михаил",
+                    PassportID = "AB123456",
+                    DateOfBirth = new DateTime(2009, 11, 11),
+                    };
 
-        //    Client client = new Client()
-        //    {
-        //        Name = "Игорь",
-        //        PassportID = null,
-        //        DateOfBirth = new DateTime(1998, 1, 2),
-        //    };
+            // Act and Assert
+            try
+            {
+                await clientService.AddClientAsync(clientToAdd);
+            }
+            catch (Limit18YearsException e)
+            {
+                Assert.Equal(typeof(Limit18YearsException), e.GetType());
+                Assert.Equal("Клиент не может быть младше 18 лет", e.Message);
+            }
+            catch (Exception)
+            {
+                Assert.True(false);
+            }
+        }
 
-        //    // Act/Assert
-        //    try
-        //    {
-        //        await clientServiceDB.AddClientAsync(client);
-        //    }
-        //    catch (NoPassportDataException e)
-        //    {
-        //        Assert.Equal(typeof(NoPassportDataException), e.GetType());
-        //        Assert.Equal("Вы не ввели паспортные данные", e.Message);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Assert.True(false);
-        //    }
-        //}
+        [Fact]
+        public async Task AddNewClientNoPassDataExceptionTest()
+        {
+            // Arrange
+            var clientService = new ClientService(_mapper, _dbContext);
+
+            Client client = new Client()
+            {
+                Name = "Игорь",
+                PassportID = null,
+                DateOfBirth = new DateTime(1998, 1, 2),
+            };
+
+            // Act/Assert
+            try
+            {
+                await clientService.AddClientAsync(client);
+            }
+            catch (NoPassportDataException e)
+            {
+                Assert.Equal(typeof(NoPassportDataException), e.GetType());
+                Assert.Equal("Вы не ввели паспортные данные", e.Message);
+            }
+            catch (Exception)
+            {
+                Assert.True(false);
+            }
+        }
 
         //[Fact]
         //public async Task AddNewAlreadyExcistingClientTest()
         //{
         //    // Arrange
-        //    ClientService clientServiceDB = new ClientServiceDB();
+        //    var clientService = new ClientService(_mapper, _dbContext);
 
         //    Client oldClient = FakeDataGenerator.CreateFakeClient();
 
@@ -90,8 +110,8 @@ namespace ServiceTests
         //    // Act/Assert
         //    try
         //    {
-        //        await clientServiceDB.AddClientAsync(oldClient);
-        //        await clientServiceDB.AddClientAsync(newClient);
+        //        await clientService.AddClientAsync(oldClient);
+        //        await clientService.AddClientAsync(newClient);
         //    }
         //    catch (ArgumentException ex)
         //    {
@@ -108,7 +128,7 @@ namespace ServiceTests
         //public async Task DeleteClientByNonExcistingKeyTest()
         //{
         //    // Arrange
-        //    ClientService clientServiceDB = new ClientServiceDB();
+        //    var clientService = new ClientService(_mapper, _dbContext);
 
         //    Client existsClient = FakeDataGenerator.CreateFakeClient();
 
@@ -117,11 +137,11 @@ namespace ServiceTests
         //    // Act/Assert
         //    try
         //    {
-        //        await clientServiceDB.AddClientAsync(existsClient);
-        //        await Assert.ThrowsAsync<KeyNotFoundException>(() => clientServiceDB.DeleteClientAsync(noExistsClient));
+        //        await clientService.AddClientAsync(existsClient);
+        //        await Assert.ThrowsAsync<KeyNotFoundException>(() => clientService.DeleteClientAsync(noExistsClient.ID));
 
-        //        await clientServiceDB.DeleteClientAsync(existsClient);
-        //        Assert.Null(await clientServiceDB.dbContext.Clients.FirstOrDefaultAsync(p => p.Id == existsClient.ID));
+        //        await clientService.DeleteClientAsync(existsClient.ID);
+        //        Assert.Null(await clientService._dbContext.Clients.FirstOrDefaultAsync(p => p.Id == existsClient.ID));
         //    }
         //    catch (Exception)
         //    {
@@ -134,7 +154,7 @@ namespace ServiceTests
         //public async Task UpdateClientByNonExcistingKeyTest()
         //{
         //    // Arrange
-        //    ClientService clientServiceDB = new ClientServiceDB();
+        //    var clientService = new ClientService(_mapper, _dbContext);
 
         //    Client realClient = FakeDataGenerator.CreateFakeClient();
 
@@ -143,10 +163,10 @@ namespace ServiceTests
         //    // Act/Assert
         //    try
         //    {
-        //        await clientServiceDB.AddClientAsync(realClient);
-        //        await clientServiceDB.UpdateClientAsync(notExistingClient);
+        //        await clientService.AddClientAsync(realClient);
+        //        await clientService.UpdateClientAsync(notExistingClient);
 
-        //        await Assert.ThrowsAsync<KeyNotFoundException>(() => clientServiceDB.UpdateClientAsync(notExistingClient));
+        //        await Assert.ThrowsAsync<KeyNotFoundException>(() => clientService.UpdateClientAsync(notExistingClient));
 
         //    }
         //    catch (Exception)
